@@ -1,0 +1,1 @@
+ab -k -n 100000 -c 1 -T 'application/json' -p request.json http://localhost:8080/message

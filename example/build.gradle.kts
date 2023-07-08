@@ -10,18 +10,12 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.2"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
-    testImplementation("org.assertj:assertj-core:3.24.2")
-
     // Logging
     implementation("org.slf4j:slf4j-api:2.0.7")
     implementation("ch.qos.logback:logback-classic:1.4.8")
-
-    // Code safety
-    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+    implementation(project(":ioc-container"))
+    implementation(project(":httpserver"))
 }
-
 
 tasks.test {
     useJUnitPlatform()
