@@ -1,4 +1,4 @@
-package se.edinjakupovic.api;
+package se.edinjakupovic.example.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

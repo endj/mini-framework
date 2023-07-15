@@ -1,7 +1,10 @@
-package se.edinjakupovic;
+package se.edinjakupovic.example;
 
-import se.edinjakupovic.api.MessageHandler;
-import se.edinjakupovic.api.TextHandler;
+import se.edinjakupovic.Configuration;
+import se.edinjakupovic.HTTPServer;
+import se.edinjakupovic.Provides;
+import se.edinjakupovic.example.api.MessageHandler;
+import se.edinjakupovic.example.api.TextHandler;
 import se.edinjakupovic.request.RequestFactory;
 import se.edinjakupovic.routing.Router;
 

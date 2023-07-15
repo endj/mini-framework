@@ -39,7 +39,9 @@ public class Main {
     }
 }
 ```
+
 output
+
 ```shell
 edin Code/mini-framework curl -v http://localhost:8080/user/Doe |jq
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -62,5 +64,48 @@ edin Code/mini-framework curl -v http://localhost:8080/user/Doe |jq
   "name": "John Doe",
   "age": 123
 }
+```
+
+Simple Bench for Echo Server
+
+```shell
+Server Hostname:        localhost
+Server Port:            8080
+
+Document Path:          /hello
+Document Length:        36 bytes
+
+Concurrency Level:      50
+Time taken for tests:   1.540 seconds
+Complete requests:      200000
+Failed requests:        0
+Keep-Alive requests:    200000
+Total transferred:      33800000 bytes
+Total body sent:        38400000
+HTML transferred:       7200000 bytes
+Requests per second:    129836.32 [#/sec] (mean)
+Time per request:       0.385 [ms] (mean)
+Time per request:       0.008 [ms] (mean, across all concurrent requests)
+Transfer rate:          21428.06 [Kbytes/sec] received
+                        24344.31 kb/s sent
+                        45772.38 kb/s total
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.0      0       1
+Processing:     0    0   0.1      0       2
+Waiting:        0    0   0.1      0       2
+Total:          0    0   0.1      0       2
+
+Percentage of the requests served within a certain time (ms)
+  50%      0
+  66%      0
+  75%      0
+  80%      0
+  90%      1
+  95%      1
+  98%      1
+  99%      1
+ 100%      2 (longest request)
 ```
 

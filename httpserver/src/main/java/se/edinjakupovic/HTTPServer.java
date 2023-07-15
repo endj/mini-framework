@@ -28,12 +28,14 @@ public class HTTPServer {
     private static final int BACKLOG;
     private static final int THREAD_POOL_SIZE;
     private static final int PORT;
+    private static final boolean LOG_REQUESTS;
 
     static {
         System.setProperty("sun.net.httpserver.nodelay", "true");
         BACKLOG = intEnv("BACKLOG", 0);
         THREAD_POOL_SIZE = intEnv("THREAD_POOL_SIZE", 50);
         PORT = intEnv("PORT", 8080);
+        LOG_REQUESTS = "true".equals(System.getenv("LOG_REQUEST"));
     }
 
     private static int intEnv(String key, int orElse) {
@@ -57,7 +59,7 @@ public class HTTPServer {
             // TODO: 2023-07-08 Replace with virtual thread-pool executor
             httpServer.setExecutor(Executors.newFixedThreadPool(THREAD_POOL_SIZE));
             httpServer.createContext("/", exchange -> {
-                log.info("Received request " + exchange.getRequestURI());
+                if (LOG_REQUESTS) log.info("Received request " + exchange.getRequestURI());
                 try {
                     Response<?> response = handleRequest(exchange);
                     writeResponse(exchange, response);
@@ -86,10 +88,15 @@ public class HTTPServer {
                 response.headers().forEach((key, values) -> values.forEach(val -> responseHeaders.add(key, val)));
             }
             if (response.value() != null) {
-                ObjectWriter objectWriter = MAPPER.writerFor(response.value().getClass());
-                String jsonResponse = objectWriter.writeValueAsString(response.value());
-                exchange.sendResponseHeaders(response.statusCode(), jsonResponse.length());
-                exchange.getResponseBody().write(jsonResponse.getBytes(UTF_8));
+                String responseString;
+                if (response.value() instanceof String val) {
+                    responseString = val;
+                } else {
+                    ObjectWriter objectWriter = MAPPER.writerFor(response.value().getClass());
+                    responseString = objectWriter.writeValueAsString(response.value());
+                }
+                exchange.sendResponseHeaders(response.statusCode(), responseString.length());
+                exchange.getResponseBody().write(responseString.getBytes(UTF_8));
             } else {
                 exchange.sendResponseHeaders(response.statusCode(), NO_RESPONSE_BODY);
             }
@@ -104,7 +111,7 @@ public class HTTPServer {
     }
 
     public void stop() {
-        log.info("Shutting donw");
+        log.info("Shutting down");
         serverReference.stop(5);
     }
 }

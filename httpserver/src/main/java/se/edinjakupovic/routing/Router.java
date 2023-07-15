@@ -71,7 +71,7 @@ public class Router {
         ));
     }
 
-    public void registerRoute(List<PathSection> pathNodeList, RequestHandler<?, ?> handler) {
+    public Router registerRoute(List<PathSection> pathNodeList, RequestHandler<?, ?> handler) {
 
         if (pathNodeList.isEmpty())
             throw new IllegalArgumentException("Invalid route " + pathNodeList);
@@ -103,6 +103,7 @@ public class Router {
         if (!sectionNode.endsPath())
             throw new IllegalStateException("Last node had no handler");
         current.setHandler(handler);
+        return this;
     }
 
 

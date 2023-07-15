@@ -1,7 +1,8 @@
-package se.edinjakupovic;
+package se.edinjakupovic.example;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.edinjakupovic.HTTPServer;
 import se.edinjakupovic.lifecycle.OnInit;
 import se.edinjakupovic.lifecycle.OnShutdown;
 

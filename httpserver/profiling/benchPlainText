@@ -1,1 +1,0 @@
-ab -k -n 100000 -c 1 -T 'application/text' -p plainText http://localhost:8080/hello/world

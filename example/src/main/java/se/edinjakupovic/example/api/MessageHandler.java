@@ -1,10 +1,10 @@
-package se.edinjakupovic.api;
+package se.edinjakupovic.example.api;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.edinjakupovic.api.model.Message;
-import se.edinjakupovic.api.model.MessageResponse;
+import se.edinjakupovic.example.api.model.Message;
+import se.edinjakupovic.example.api.model.MessageResponse;
 import se.edinjakupovic.request.Request;
 import se.edinjakupovic.request.RequestHandler;
 import se.edinjakupovic.request.Response;
