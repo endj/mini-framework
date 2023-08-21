@@ -1,4 +1,4 @@
-package se.edinjakupovic.example.api;
+package se.edinjakupovic.largerexample.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +17,4 @@ public class TextHandler implements RequestHandler<String, Void> {
         return EMPTY_RESPONSE;
     }
 
-    @Override
-    public Class<String> requestType() {
-        return String.class;
-    }
 }

@@ -9,27 +9,18 @@ Minimal framework for testing stuff. Not intended for any serious use.
 ```java
 @Configuration
 public class Main {
-
-
     record User(String name, int age) {}
 
     @Provides
     HTTPServer server() {
-        Router router = new Router(new RequestFactory());
-        router.registerRoute(parse("/user/:lastname"), new RequestHandler<String, User>() {
-
-            @Override
-            public Response<User> handle(Request<String> request) {
-                String lastname = request.pathVariables().get(0);
-                return Response.ok(new User("John " + lastname, 123));
-            }
-
-            @Override
-            public Class<String> requestType() {
-                return String.class;
-            }
-        });
-        return new HTTPServer(router);
+        return new HTTPServer(new Router(new RequestFactory())
+                .registerRoute("/user/:lastname", new RequestHandler<String, User>() {
+                    @Override
+                    public Response<User> handle(Request<String> request) {
+                        String lastname = request.pathVariables().get(0);
+                        return Response.ok(new User("John " + lastname, 123));
+                    }
+                }));
     }
 
     public static void main(String[] args) {

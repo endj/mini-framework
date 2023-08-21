@@ -3,6 +3,7 @@ package se.edinjakupovic.routing;
 import se.edinjakupovic.request.Request;
 import se.edinjakupovic.request.RequestHandler;
 import se.edinjakupovic.request.Response;
+import se.edinjakupovic.request.TypedRequestHandler;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -12,9 +13,9 @@ public class PrefixTreePathNode {
 
     private PrefixTreePathNode wildcardNode;
     private final Map<String, PrefixTreePathNode> children;
-    private RequestHandler<?, ?> handler;
+    private TypedRequestHandler<?, ?> handler;
 
-    private PrefixTreePathNode(Map<String, PrefixTreePathNode> children, RequestHandler<?, ?> handler) {
+    private PrefixTreePathNode(Map<String, PrefixTreePathNode> children, TypedRequestHandler<?, ?> handler) {
         this.wildcardNode = null;
         this.children = children;
         this.handler = handler;
@@ -32,17 +33,16 @@ public class PrefixTreePathNode {
     public static PrefixTreePathNode rootNode() {
         return new PrefixTreePathNode(
                 new HashMap<>(),
-                new RequestHandler<String, Void>() {
-                    @Override
-                    public Response<Void> handle(Request<String> request) {
-                        return Response.EMPTY_RESPONSE;
-                    }
+                new TypedRequestHandler<>(
+                        new RequestHandler<String, Void>() {
+                            @Override
+                            public Response<Void> handle(Request<String> request) {
+                                return Response.EMPTY_RESPONSE;
+                            }
 
-                    @Override
-                    public Class<String> requestType() {
-                        return String.class;
-                    }
-                }
+                        },
+                        String.class
+                )
         );
     }
 
@@ -75,12 +75,12 @@ public class PrefixTreePathNode {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public <T, R> RequestHandler<T, R> getHandler() {
-        return (RequestHandler<T, R>) handler;
+    public <T, R> TypedRequestHandler<T, R> getHandler() {
+        return (TypedRequestHandler<T, R>) handler;
     }
 
 
-    public void setHandler(RequestHandler<?, ?> handler) {
+    public void setHandler(TypedRequestHandler<?, ?> handler) {
         this.handler = handler;
     }
 }

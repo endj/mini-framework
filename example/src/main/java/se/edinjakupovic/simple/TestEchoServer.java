@@ -12,15 +12,10 @@ import static se.edinjakupovic.routing.UrlPartsParser.parse;
 public class TestEchoServer {
     public static void main(String[] args) {
         new HTTPServer(new Router(new RequestFactory())
-                .registerRoute(parse("/hello"), new RequestHandler<String, String>() {
+                .registerRoute("/hello", new RequestHandler<String, String>() {
                     @Override
                     public Response<String> handle(Request<String> request) {
                         return Response.ok(request.value());
-                    }
-
-                    @Override
-                    public Class<String> requestType() {
-                        return String.class;
                     }
                 }))
                 .start();

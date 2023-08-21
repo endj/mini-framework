@@ -5,17 +5,19 @@ import se.edinjakupovic.request.RequestFactory;
 import se.edinjakupovic.request.RequestHandler;
 import se.edinjakupovic.request.Response;
 import se.edinjakupovic.request.RoutingException;
+import se.edinjakupovic.request.TypedRequestHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
+import static se.edinjakupovic.routing.UrlPartsParser.parse;
 
 public class Router {
 
     private static final PrefixTreePathNode ROOT = PrefixTreePathNode.rootNode();
-    private static final RequestHandler<String, String> ROOT_HANDLER = requireNonNull(ROOT.getHandler());
+    private static final TypedRequestHandler<String, String> ROOT_HANDLER = requireNonNull(ROOT.getHandler());
     private final RequestFactory requestFactory;
 
     public Router(RequestFactory requestFactory) {
@@ -24,7 +26,7 @@ public class Router {
 
     public Response<?> handleRequest(String[] uriSegments, HttpExchange exchange) {
         if (uriSegments.length == 0)
-            return ROOT_HANDLER.handle(requestFactory.from(exchange, String.class));
+            return ROOT_HANDLER.requestHandler().handle(requestFactory.from(exchange, String.class));
 
         PrefixTreePathNode current = ROOT;
         List<String> pathVariables = null;
@@ -63,7 +65,7 @@ public class Router {
             throw new RoutingException("No handler for provided path");
 
         var handler = current.getHandler();
-        return handler.handle(requestFactory.from(
+        return handler.requestHandler().handle(requestFactory.from(
                 exchange,
                 pathVariables,
                 requestParameters,
@@ -71,8 +73,10 @@ public class Router {
         ));
     }
 
-    public Router registerRoute(List<PathSection> pathNodeList, RequestHandler<?, ?> handler) {
-
+    public <T, R> Router registerRoute(String routeDefinition, RequestHandler<T, R> handler) {
+        if (routeDefinition == null || routeDefinition.isBlank())
+            throw new IllegalArgumentException("Invalid route " + routeDefinition);
+        var pathNodeList = parse(routeDefinition);
         if (pathNodeList.isEmpty())
             throw new IllegalArgumentException("Invalid route " + pathNodeList);
 
@@ -102,7 +106,9 @@ public class Router {
 
         if (!sectionNode.endsPath())
             throw new IllegalStateException("Last node had no handler");
-        current.setHandler(handler);
+        current.setHandler(
+                new TypedRequestHandler<>(handler, handler.requestType()
+                ));
         return this;
     }
 
